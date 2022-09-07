@@ -6,7 +6,11 @@ scene.background=new THREE.Color(0x5B2286);
 
 
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-camera.position.z = 1;
+camera.position.z =60;
+camera.position.y =0;
+camera.position.x =0;
+camera.lookAt(0,0,0)
+
 
 
 var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -19,8 +23,14 @@ modelContainer.appendChild( renderer.domElement );
 var controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.25;
-controls.enableZoom = true;
-// const axesHelper = new THREE.AxesHelper( 5 );
+controls.enableZoom = false;
+controls.enablePan = false;
+var start = 45  //current angle
+// controls.maxAzimuthAngle = THREE.Math.degToRad(start)
+// controls.minAzimuthAngle = THREE.Math.degToRad(start)
+controls.maxPolarAngle = THREE.Math.degToRad(180-start)
+controls.minPolarAngle = THREE.Math.degToRad(120-start)
+// const axesHelper = new THREE.AxesHelper(100);
 // scene.add( axesHelper );
 
 // const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
@@ -35,6 +45,7 @@ controls.enableZoom = true;
 
 const light1 = new THREE.AmbientLight(0xFFFFFF,1 ); // soft white light
 scene.add( light1 );
+
 
 // var keyLight = new THREE.DirectionalLight(new THREE.Color('hsl(30, 100%, 75%)'), 0.1);
 // keyLight.position.set(-100, 0, 100);
@@ -77,73 +88,86 @@ var obj;
 // });
 
 const gltfLoader = new THREE.GLTFLoader();
-const url = 'model/harshhead.glb';
+const url = 'model/head.glb';
 gltfLoader.load(url, (gltf) => {
   const root = gltf.scene;
   obj=root;
-  root.scale.set(2,2,2);
-  // root.position.y-=2;
+
+  obj.position.x=0;
+  obj.position.y=0;
+  obj.position.z=0;
+  obj.scale.set(0.8,0.8,0.8);
+  if(window.innerWidth<1050)
+  {
+    obj.scale.set(0.6,0.6,0.6);
+    obj.position.x=0;
+
+  }
+
   root.receiveShadow = true;
   root.castShadow = true;
   scene.add(root);
 
-});
-var position = { x : 0, y: 0 };
-var target = { x :1, y: 0 };
+ 
 
-var tween = new TWEEN.Tween(position).to(target, 2000);
+  
+});
+
+var position = { x : -1, y: 0 };
+var target = { x :1, y: 0 };
+var animTime = 800
+var k =3
+var z = 4
+var facx =-1.5
+var facz =1.5
+
+var tween = new TWEEN.Tween(position).to(target, animTime);
 tween.onUpdate(function(){
-  // obj.position.x = position.x;
-  // obj.position.y = position.y;
-  obj.rotation.y=position.x;
+
+  obj.rotation.y=-position.x/2;
+  obj.rotation.x=Math.abs(position.x/k) *facx -facx/4;
+  obj.rotation.z=position.x/z * facz;
+
+
+
 });
 tween.onComplete(function() {
-  // position = { x :obj.rotation.y, y: 0 };
  tween2.start();
 });
-tween.easing(TWEEN.Easing.Elastic.Out);
+var tweenCurve = TWEEN.Easing.Quadratic.Out
+tween.easing(tweenCurve);
 
 
-var tween2 = new TWEEN.Tween(position).to({x:0,y:0}, 2000);
+var tween2 = new TWEEN.Tween(position).to({x:-1,y:0}, animTime);
 tween2.onUpdate(function(){
-  // obj.position.x = position.x;
-  // obj.position.y = position.y;
-  obj.rotation.y=position.x;
+
+  obj.rotation.y=-position.x/2;
+  obj.rotation.x=Math.abs(position.x/k) * facx - facx/4;
+  obj.rotation.z=position.x/z * facz;
+
 });
 tween2.onComplete(function() {
-  // position = { x : 0, y: 0 };
-  // target={x:0, y:0};
-  // tween.start();
+
+  tween.start();
+
 });
-tween2.easing(TWEEN.Easing.Elastic.Out);
-
-// tween.start();
-window.addEventListener('click',()=>{
-  // prompt(camera.rotation.x);
+tween2.easing(tweenCurve);
 
 
-  // controls.target.set(1,1,1)
-// tween.start();
-});
 
-
+tween.start();
 
 var animate = function () {
 	requestAnimationFrame( animate );
  
    if(obj)
-   {
+  {
      TWEEN.update();
     
-    //  position = { x :obj.rotation.x, y: 0 };
-    
-        // obj.rotation.z+=0.01;
-    // obj.rotation.x+=0.01;
-    // obj.rotation.y+=0.01;
+  
+
 }
-// if(obj)
-// {createjs.Tween.get(obj.rotation, { loop: true }).wait(500).to({ y: Math.PI*2 }, 1500, createjs.Ease.getPowInOut(3)).wait(500);
-// }
+
 
 
     controls.update();

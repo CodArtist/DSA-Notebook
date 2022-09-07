@@ -1,0 +1,261 @@
+<!DOCTYPE html><html><head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+    <link href="./css/simulationPage.css" rel="stylesheet" />
+    <link href="./css/AddNodePop.css" rel="stylesheet" />
+
+    <title>Simulation Page</title>
+    <script
+    type="text/javascript"
+    src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"
+  ></script>
+  <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <script src = "https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=sons-of-obsidian"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+</head>
+<body class=" w-screen lg:h-screen h-screen overflow-y-hidden bg-green-100 m-0 p-0">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <div class=" v59_89 flex lg:flex-row flex-col lg:space-x-5 justify-start items-start bg-white h-full" id="blur">
+        
+
+        <!-- SideBar -->
+        <div class=" absolute z-50 lg:relative bottom-5 lg:bottom-auto flex lg:flex-col justify-between w-screen lg:w-auto lg:h-screen bg-purple-700 rounded-full p-2 pr-4 pl-4 lg:pr-2 lg:pl-2 lg:pt-5 lg:pb-5">
+
+        <!-- Algo button -->
+        <div class=" cursor-pointer flex flex-col space-y-2 justify-center items-center"  onclick="AddAlgoPop()">
+            <div class=" flex flex-col justify-center items-center bg-orange-500 hover:bg-white lg:w-16 lg:h-16 w-10 h-10 rounded-full">
+                <div class="fa fa-lightbulb-o"></div>
+            </div>            <div class="text-white lg:text-sm text-xs">Algorithm</div>
+        </div>
+
+         <!-- Code button -->
+         <div class=" cursor-pointer flex flex-col space-y-2 justify-center items-center" onclick="AddCodePop()">
+            <div class=" flex flex-col justify-center items-center bg-orange-500 hover:bg-white lg:w-16 lg:h-16 w-10 h-10 rounded-full">
+                <div class="fa fa-code"></div>
+            </div>
+            <div class="text-white lg:text-sm text-xs">Code</div>
+        </div>
+
+         <!-- Play button -->
+         <div class=" cursor-pointer flex flex-col space-y-2 justify-center items-center"  onclick="MinSpanTree()">
+            <div class=" flex flex-col justify-center items-center bg-orange-500 hover:bg-white lg:w-16 lg:h-16 w-10 h-10 rounded-full">
+                <div class="fa fa-play"></div>
+            </div>            <div class="text-white lg:text-sm text-xs">Min Spanning Tree</div>
+        </div>
+
+         <!-- Add Node button -->
+         <div class=" cursor-pointer flex flex-col space-y-2 justify-center items-center" onclick="AddNodePop()">
+            <div class=" flex flex-col justify-center items-center bg-orange-500 hover:bg-white lg:w-16 lg:h-16 w-10 h-10 rounded-full">
+                <div class="text-white hover:text-black">+</div>
+            </div>
+            <div class="text-white lg:text-sm text-xs">Add Node</div>
+        </div>
+
+        </div>
+        
+        <!-- White board -->
+        <div class=" bg-white shadow-lg rounded-xl lg:h-screen h-full w-screen lg:w-screen" id="mynetwork"></div>
+
+    
+    </div>
+   
+
+
+            <!-- Add Node Details -->
+ 
+<div class=" absolute p-5 space-y-8  flex flex-col w-[300px] left-1/2 -ml-36 lg:ml-0 h-1/2 lg:w-1/2 top-1/4 lg:left-1/4 bg-white shadow-lg rounded-3xl" style=" visibility:hidden;" id="popupNode">
+
+<div class="absolute top-0 right-0 flex flex-row bg-white rounded-full w-8 h-8 text-black justify-center items-center shadow-lg p-2 cursor-pointer" onclick="AddNodePop()">X</div>
+<div class="flex flex-col ">
+    <div class=" text-lg">Node Name</div>
+    <input class=" outline-5 text-sm" placeholder="Enter Node Name..." type="text" id="NodeName">
+</div>
+<div class="flex flex-row bg-purple-700 rounded-xl text-white w-[100px] justify-center items-center shadow-lg p-2 cursor-pointer" onclick="CreateNode()"">Create</div>
+
+</div>
+
+ <!-- Add edge Details -->
+
+ <div class=" absolute p-5 space-y-8  flex flex-col w-[300px] left-1/2 -ml-36 lg:ml-0 h-1/2 lg:w-1/2 top-1/4 lg:left-1/4 bg-white shadow-lg rounded-3xl" style=" visibility:hidden;" id="popupEdge">
+
+    <div class="absolute top-0 right-0 flex flex-row bg-white rounded-full w-8 h-8 text-black justify-center items-center shadow-lg p-2 cursor-pointer" onclick="CancelEdgePop()">X</div>
+    <div class="flex flex-col ">
+        <div class=" text-lg">Edge Weight</div>
+        <input class=" outline-5 text-sm" placeholder="Enter EdgeWeight..." type="text" id="EdgeWeight">
+    </div>
+    <div class="flex flex-row bg-purple-700 rounded-xl text-white w-[100px] justify-center items-center shadow-lg p-2 cursor-pointer" onclick="CreateEdge()"">Create</div>
+    
+    </div>
+
+
+
+<!-- Algorithm PopUp -->
+<div class=" absolute pr-5 pl-5 pb-3 space-y-8  flex flex-col w-[300px] left-1/2 -ml-36 lg:ml-0 h-1/2 lg:w-1/2 top-1/4 lg:left-1/4 bg-white shadow-lg rounded-3xl" style=" visibility:hidden;" id="popupAlgo">
+
+    <div class="absolute top-0 right-0 flex flex-row bg-white rounded-full w-8 h-8 text-black justify-center items-center shadow-lg p-2 cursor-pointer" onclick="AddAlgoPop()">X</div>
+
+<h1 class="text-base font-bold text-black">Prim's Algorithm</h1>
+<span class=" flex flex-row  text-sm w-full h-full overflow-y-scroll">
+   Step1. Start at any node in the graph <br><br>
+   Step2. Mark the starting node as reached <br><br>
+   Step3. Mark all the other nodes in the graph as unreached <br><br>   
+   Step4. Right now, the Minimum cost Spanning Tree (MST) consists of the starting node <br><br><br>
+    
+    We expand the MST with the procedure given below....<br><br><br>
+    
+   Step5. Find an edge e with minimum cost in the graph that connects:<br><br>
+    &nbsp   &nbsp a) A reached node x to an unreached node y<br><br><br>
+   Step6. Add the edge e found in the previous step to the Minimum cost Spanning Tree<br><br>
+   Step7. Mark the unreached node y as reached<br><br>
+   Step8. Repeat the steps 5,6,7 until all nodes in the graph have become reached
+    
+    
+</span>
+
+
+</div>
+
+<!-- Code PopUp -->
+<div class=" absolute pr-2 pl-2 pb-3 space-y-8  flex flex-col w-[300px] left-1/2 -ml-36 lg:ml-0 h-auto lg:w-1/2 top-1/4 lg:left-1/4 bg-white shadow-lg rounded-3xl" style=" visibility:hidden;" id="popupCode">
+    <div class="absolute top-0 right-0 flex flex-row bg-white rounded-full w-8 h-8 text-black justify-center items-center shadow-lg p-2 cursor-pointer" onclick="AddCodePop()">X</div>
+
+    <h1 class="text-base font-bold text-black ml-3 mr-3">Prim's Algorithm Code</h1>
+
+
+
+<span class="w-full h-1/2 rounded-xl text-xs" >
+ <?prettify linenums=1?>
+    <pre class="prettyprint" style=" width: auto;
+    overflow: auto;
+    max-height: 350px;
+    border-radius: 20px;">
+    // A C++ program for Prim's Minimum 
+    // Spanning Tree (MST) algorithm. The program is 
+    // for adjacency matrix representation of the graph 
+    #include <bits/stdc++.h>
+    using namespace std;
+      
+    // Number of vertices in the graph 
+    #define V 5 
+      
+    // A utility function to find the vertex with 
+    // minimum key value, from the set of vertices 
+    // not yet included in MST 
+    int minKey(int key[], bool mstSet[]) 
+    { 
+        // Initialize min value 
+        int min = INT_MAX, min_index; 
+      
+        for (int v = 0; v < V; v++) 
+            if (mstSet[v] == false && key[v] < min) 
+                min = key[v], min_index = v; 
+      
+        return min_index; 
+    } 
+      
+    // A utility function to print the 
+    // constructed MST stored in parent[] 
+    void printMST(int parent[], int graph[V][V]) 
+    { 
+        cout<<"Edge \tWeight\n"; 
+        for (int i = 1; i < V; i++) 
+            //cout<< parent[i]<< - "<< i<<" \t"<< graph[i][parent[i]]<<" \n"; 
+    } 
+      
+    // Function to construct and print MST for 
+    // a graph represented using adjacency 
+    // matrix representation 
+    void primMST(int graph[V][V]) 
+    { 
+        // Array to store constructed MST 
+        int parent[V]; 
+          
+        // Key values used to pick minimum weight edge in cut 
+        int key[V]; 
+          
+        // To represent set of vertices included in MST 
+        bool mstSet[V]; 
+      
+        // Initialize all keys as INFINITE 
+        for (int i = 0; i < V; i++) 
+            key[i] = INT_MAX, mstSet[i] = false; 
+      
+        // Always include first 1st vertex in MST. 
+        // Make key 0 so that this vertex is picked as first vertex. 
+        key[0] = 0; 
+        parent[0] = -1; // First node is always root of MST 
+      
+        // The MST will have V vertices 
+        for (int count = 0; count < V - 1; count++)
+        { 
+            // Pick the minimum key vertex from the 
+            // set of vertices not yet included in MST 
+            int u = minKey(key, mstSet); 
+      
+            // Add the picked vertex to the MST Set 
+            mstSet[u] = true; 
+      
+            // Update key value and parent index of 
+            // the adjacent vertices of the picked vertex. 
+            // Consider only those vertices which are not 
+            // yet included in MST 
+            for (int v = 0; v < V; v++) 
+      
+                // graph[u][v] is non zero only for adjacent vertices of m 
+                // mstSet[v] is false for vertices not yet included in MST 
+                // Update the key only if graph[u][v] is smaller than key[v] 
+                if (graph[u][v] && mstSet[v] == false && graph[u][v] < key[v]) 
+                    parent[v] = u, key[v] = graph[u][v]; 
+        } 
+      
+        // print the constructed MST 
+        printMST(parent, graph); 
+    } 
+      
+    // Driver code
+    int main() 
+    { 
+        /* Let us create the following graph 
+            2 3 
+        (0)--(1)--(2) 
+        | / \ | 
+        6| 8/ \5 |7 
+        | / \ | 
+        (3)-------(4) 
+                9     */
+        int graph[V][V] = { { 0, 2, 0, 6, 0 }, 
+                            { 2, 0, 3, 8, 5 }, 
+                            { 0, 3, 0, 0, 7 }, 
+                            { 6, 8, 0, 0, 9 }, 
+                            { 0, 5, 7, 9, 0 } }; 
+      
+        // Print the solution 
+        primMST(graph); 
+      
+        return 0; 
+    } 
+
+   </pre>
+    
+    
+</span>
+
+
+
+
+</div>
+
+            <script src="./script/AddNode.js"></script>
+            <script src="./script/PrimsMinSpanTree.js"></script>
+            <script src="./script/PlaySimulation.js"></script>
+            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+          </body>
+        </body>
+
+        </html>

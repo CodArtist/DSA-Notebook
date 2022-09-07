@@ -1,0 +1,203 @@
+<!DOCTYPE html><html><head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+    <link href="./css/simulationPage.css" rel="stylesheet" />
+    <link href="./css/AddNodePop.css" rel="stylesheet" />
+
+    <title>Simulation Page</title>
+    <script
+    type="text/javascript"
+    src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"
+  ></script>
+  <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <script src = "https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=sons-of-obsidian"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+    <body class=" w-screen lg:h-screen h-screen overflow-y-hidden bg-green-100 m-0 p-0">
+        <script src="https://cdn.tailwindcss.com"></script>
+
+    
+        <div class=" v59_89 flex lg:flex-row flex-col lg:space-x-5 justify-start items-start bg-white h-full" id="blur">
+        
+
+            <!-- SideBar -->
+            <div class=" absolute z-50 lg:relative bottom-5 lg:bottom-auto flex lg:flex-col justify-between w-screen lg:w-auto lg:h-screen bg-purple-700 rounded-full p-2 pr-4 pl-4 lg:pr-2 lg:pl-2 lg:pt-5 lg:pb-5">
+    
+            <!-- Algo button -->
+            <div class=" cursor-pointer flex flex-col space-y-2 justify-center items-center"  onclick="AddAlgoPop()">
+                <div class=" flex flex-col justify-center items-center bg-orange-500 hover:bg-white lg:w-16 lg:h-16 w-10 h-10 rounded-full">
+                    <div class="fa fa-lightbulb-o"></div>
+                </div>            <div class="text-white lg:text-sm text-xs">Algorithm</div>
+            </div>
+    
+             <!-- Code button -->
+             <div class=" cursor-pointer flex flex-col space-y-2 justify-center items-center" onclick="AddCodePop()">
+                <div class=" flex flex-col justify-center items-center bg-orange-500 hover:bg-white lg:w-16 lg:h-16 w-10 h-10 rounded-full">
+                    <div class="fa fa-code"></div>
+                </div>
+                <div class="text-white lg:text-sm text-xs">Code</div>
+            </div>
+    
+             <!-- Play button -->
+             <div class=" cursor-pointer flex flex-col space-y-2 justify-center items-center"  onclick="MinSpanTree()">
+                <div class=" flex flex-col justify-center items-center bg-orange-500 hover:bg-white lg:w-16 lg:h-16 w-10 h-10 rounded-full">
+                    <div class="fa fa-play"></div>
+                </div>            <div class="text-white lg:text-sm text-xs">Min Spanning Tree</div>
+            </div>
+    
+             <!-- Add Node button -->
+             <div class=" cursor-pointer flex flex-col space-y-2 justify-center items-center" onclick="AddNodePop()">
+                <div class=" flex flex-col justify-center items-center bg-orange-500 hover:bg-white lg:w-16 lg:h-16 w-10 h-10 rounded-full">
+                    <div class="text-white hover:text-black">+</div>
+                </div>
+                <div class="text-white lg:text-sm text-xs">Add Node</div>
+            </div>
+    
+            </div>
+            
+            <!-- White board -->
+            <div class=" bg-white shadow-lg rounded-xl lg:h-screen h-full w-screen lg:w-screen" id="mynetwork"></div>
+    
+        
+        </div>
+
+
+
+  <!-- Add Node Details -->
+ 
+  <div class=" absolute p-5 space-y-8  flex flex-col w-[300px] left-1/2 -ml-36 lg:ml-0 h-1/2 lg:w-1/2 top-1/4 lg:left-1/4 bg-white shadow-lg rounded-3xl" style=" visibility:hidden;" id="popupNode">
+
+    <div class="absolute top-0 right-0 flex flex-row bg-white rounded-full w-8 h-8 text-black justify-center items-center shadow-lg p-2 cursor-pointer" onclick="AddNodePop()">X</div>
+    <div class="flex flex-col ">
+        <div class=" text-lg">Node Name</div>
+        <input class=" outline-5 text-sm" placeholder="Enter Node Name..." type="text" id="NodeName">
+    </div>
+    <div class="flex flex-row bg-purple-700 rounded-xl text-white w-[100px] justify-center items-center shadow-lg p-2 cursor-pointer" onclick="CreateNode()"">Create</div>
+    
+    </div>
+    
+     <!-- Add edge Details -->
+    
+     <div class=" absolute p-5 space-y-8  flex flex-col w-[300px] left-1/2 -ml-36 lg:ml-0 h-1/2 lg:w-1/2 top-1/4 lg:left-1/4 bg-white shadow-lg rounded-3xl" style=" visibility:hidden;" id="popupEdge">
+    
+        <div class="absolute top-0 right-0 flex flex-row bg-white rounded-full w-8 h-8 text-black justify-center items-center shadow-lg p-2 cursor-pointer" onclick="CancelEdgePop()">X</div>
+        <div class="flex flex-col ">
+            <div class=" text-lg">Edge Weight</div>
+            <input class=" outline-5 text-sm" placeholder="Enter EdgeWeight..." type="text" id="EdgeWeight">
+        </div>
+        <div class="flex flex-row bg-purple-700 rounded-xl text-white w-[100px] justify-center items-center shadow-lg p-2 cursor-pointer" onclick="CreateEdge()"">Create</div>
+        
+        </div>
+
+<!-- Algorithm PopUp -->
+<div class=" absolute pr-5 pl-5 pb-3 space-y-8  flex flex-col w-[300px] left-1/2 -ml-36 lg:ml-0 h-1/2 lg:w-1/2 top-1/4 lg:left-1/4 bg-white shadow-lg rounded-3xl" style=" visibility:hidden;" id="popupAlgo">
+
+    <div class="absolute top-0 right-0 flex flex-row bg-white rounded-full w-8 h-8 text-black justify-center items-center shadow-lg p-2 cursor-pointer" onclick="AddAlgoPop()">X</div>
+
+<h1 class="text-base font-bold text-black">Kruskal Algorithm</h1>
+<span class=" flex flex-row  text-sm w-full h-full overflow-y-scroll">
+    Step1. Sort all the edges in non-decreasing order of their weight. <br><br>
+    Step2.Pick the smallest edge. Check if it forms a cycle with the spanning tree formed so far.<br>If cycle is not formed, include this edge. Else, discard it.<br><br>
+    Step3. Repeat step#2 until there are (V-1) edges in the spanning tree. <br>  
+    
+    
+</span>
+
+
+</div>
+
+
+
+<!-- Code PopUp -->
+<div class=" absolute pr-2 pl-2 pb-3 space-y-8  flex flex-col w-[300px] left-1/2 -ml-36 lg:ml-0 h-auto lg:w-1/2 top-1/4 lg:left-1/4 bg-white shadow-lg rounded-3xl" style=" visibility:hidden;" id="popupCode">
+    <div class="absolute top-0 right-0 flex flex-row bg-white rounded-full w-8 h-8 text-black justify-center items-center shadow-lg p-2 cursor-pointer" onclick="AddCodePop()">X</div>
+
+    <h1 class="text-base font-bold text-black ml-3 mr-3">Prim's Algorithm Code</h1>
+
+
+
+<span class="w-full h-1/2 rounded-xl text-xs" >
+ <?prettify linenums=1?>
+    <pre class="prettyprint" style=" width: auto;
+    overflow: auto;
+    max-height: 350px;
+    border-radius: 20px;">
+   function MinSpanTree()
+   {   if(nodes.length>edges.length)
+       {
+           window.alert("Make sure the graph is closed");
+       }
+      else{
+       var sortedEdges = Sort_The_Edges(arr_edges);
+       console.log(sortedEdges);
+       var MinSpanEdges= Remove_Loop_From_Edges(sortedEdges);
+       console.log("answer is-------------");
+       console.log(MinSpanEdges);
+       edges.clear();
+       arr_edges=MinSpanEdges;
+       edges.add(MinSpanEdges);
+      }
+   }
+   
+   function Sort_The_Edges(e){
+       console.log("after sorting");
+       var sortededges=e.sort(function(a,b){
+       return parseInt(a.label)-parseInt(b.label);
+       });
+       return sortededges;
+   }
+   
+   
+   function Remove_Loop_From_Edges(sortedEdges)
+   {var visited_nodes= new Array(nodes.length).fill(-1);
+   var result=[];
+        sortedEdges.forEach(element => {
+        if(Find(visited_nodes,element["from"]-1)!=Find(visited_nodes,element["to"]-1))     
+   {
+       result.push(element);
+       Union(Find(visited_nodes,element["from"]-1),Find(visited_nodes,element["to"]-1),visited_nodes);
+   
+   }
+   
+   
+   });
+   return result;
+   
+   }
+   
+   function Find(visited_nodes,n)
+   {
+   if(visited_nodes[n]==-1)
+   {
+       return n;
+   }
+   return Find(visited_nodes,visited_nodes[n]);
+   }
+   
+   function Union(s1,s2,visited_nodes)
+   {visited_nodes[s1]=s2;
+   
+   }
+
+   </pre>
+    
+    
+</span>
+
+
+
+</div>
+
+            <script src="./script/AddNode.js"></script>
+            <script src="./script/KruskalMinSpanTree.js"></script>
+            <script src="./script/PlaySimulation.js"></script>
+            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+          </body>
+        </body>
+
+        </html>
